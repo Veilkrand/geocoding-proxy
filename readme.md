@@ -16,7 +16,7 @@ To install, configure and run the app. You need to perform several steps:
 Clone the github repo to your production machine and access the work directory:
 
 ```
-$ git clone https://github.com/Veilkrand/geocoding-proxy
+$ git clone https://github.com/Veilkrand/geocoding-proxy.git
 $ cd geocoding-proxy
 ```
 
@@ -32,7 +32,7 @@ From the repo work directory, build the container image using a Dockerfile:
 
 Start the container as a daemon process:
 
-````$ docker run -d -p 5000:5000 --env-file ./env.list geocoding-proxy```
+```$ docker run -d -p 5000:5000 --env-file ./env.list geocoding-proxy```
 
 Check the container is up:
 
@@ -49,7 +49,7 @@ If you can't access the local server you can try to debug the container running 
 There's only one GET method `find` with one parameter `address` we can use to find the geographic coordinates of the provided address. Multiple results for one requested address could be returned. 
 If Google geocoding service is unavailable or is unable to find any result for the provided address it will automatically failover to the HERE geocoding services with the same query. The result object includes a `service_provider` field with the source of the query.
 
-### Curl examples*
+### Curl examples
 
 Multiple results:
 
@@ -126,7 +126,7 @@ Every object inside `locations` will include `coords` with `latitude` and `longi
 
 ### API Errors
 
-*Error 400: Parameter required*
+#### Error 400: Parameter required
 The `address` parameter was not included in the request, was empty or not valid.
 
 ```
@@ -141,7 +141,7 @@ The `address` parameter was not included in the request, was empty or not valid.
 }
 ```
 
-*Error 404: Address not found*
+#### Error 404: Address not found
 After checking both service provider no results were found for the supplied address.
 
 ```
@@ -186,11 +186,3 @@ Run interactive mode using bash as entry point:
 ```
 sudo docker exec -i -t [container name] /bin/bash
 ```
-
-## Topics
-
-
-- Github:
-	- Endlines
-	- gitignore
-
