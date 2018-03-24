@@ -162,7 +162,7 @@ After checking both service provider no results were found for the supplied addr
 You can run the Python app `/app/proxy.py` from the command line with additional arguments as `max_results` and `provider_mode`.
 
 ```
-$ python proxy.py [Address] [Max_results] [Provider_mode]`
+$ python proxy.py [Address] [Max_results] [Provider_mode]
 ```
 
 `max_results` will limit the maximum number of results per provider. `Provider_mode` can be `all` for including results from both providers, or `failover` as default behaviour.
@@ -184,5 +184,5 @@ $ docker ps
 Run interactive mode using bash as entry point:
 
 ```
-sudo docker exec -i -t [container name] /bin/bash
+$ sudo docker exec -i -t [container name] /bin/bash
 ```
