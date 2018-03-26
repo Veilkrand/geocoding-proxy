@@ -3,8 +3,8 @@
 > 3/21/2018
 
 ## Overview
-Mini project to implement a geocoding proxy with a failover mechanism for 3rd party service providers, using Google Maps API as primary and HERE API as secundary.
-The REST interface was implement in Flask and the production deployment is using a Docker container with Ubuntu.
+Mini project to implement a geocoding proxy with a failover mechanism for 3rd party service providers, using Google Maps API as primary and HERE API as secundary service provider.
+The REST interface was implemented in Flask and a Docker container with Ubuntu for deployment.
 
 
 ## Installation 
@@ -22,7 +22,7 @@ $ cd geocoding-proxy
 
 ### 2. Setup API keys for service providers
 
-Inside the work directory edit the file `env.list` with your Google Maps and HERE API keys. This file will be used in the next steps to build the Docker image and run the container with these environment variables. The file can be deleted afterwards for more security.
+Inside the work directory edit the file `env.list` with your Google Maps and HERE API keys. This file will be used in the next steps to build the Docker image and run the container with these environment variables. This file can be deleted afterwards for more security.
 
 ### 3. Setup the Docker Container
 
@@ -38,7 +38,7 @@ Check the container is up:
 
 ```$ docker ps```
 
-Test you can access the local web server with a browser at `http://127.0.0.1:5000/` within the same production network.
+Test you can access the local web server with a browser at `http://127.0.0.1:5000/` within the same network.
 If you can't access the local server you can try to debug the container running an interactive session:
 
 ```docker run -it -p 5000:5000 --env-file ./env.list geocoding-proxy```
@@ -47,7 +47,7 @@ If you can't access the local server you can try to debug the container running 
 ## Using the API
 
 There's only one GET method `find` with one parameter `address` we can use to find the geographic coordinates of the provided address. Multiple results for one requested address could be returned. 
-If Google geocoding service is unavailable or is unable to find any result for the provided address it will automatically failover to the HERE geocoding services with the same query. The result object includes a `service_provider` field with the source of the query.
+If Google geocoding service is unavailable or unable to find any result for the address it will automatically fallback to the HERE geocoding services with the same query. The result object includes a `service_provider` field to identify the provider of the query.
 
 ### Curl examples
 
@@ -69,12 +69,12 @@ No results:
 curl -H "Accept: application/json" "http://127.0.0.1:5000/find/?address=braaaa"
 ```
 
-You can query as well the same service passing the address parameter value as part of the url: `http://127.0.0.1:5000/find/Toledo`. This is particulary useful if we want the users to access the service from their browsers.
+You can query as well the same service passing the address parameter value as part of the url e.g.: `http://127.0.0.1:5000/find/Toledo`. This is particulary useful if we want the users to access the service directly from a web browser.
 
-### Result Json format
+### Results Json object format
 
-The `results` object includes `service_provider` as the source of the serevice and one or multiple `locations` objects.
-Every object inside `locations` will include `coords` with `latitude` and `longitude` and a formalized `address` of the result.
+The `results` object will be returned by the service app if the providers are able to find results for the address. It includes a `service_provider` field, and one or several `locations` objects.
+Every object inside `locations` will include `coords` with `latitude` and `longitude` coordinates, and a formalized `address` by the provider.
 
 ```
 {
@@ -127,7 +127,7 @@ Every object inside `locations` will include `coords` with `latitude` and `longi
 ### API Errors
 
 #### Error 400: Parameter required
-The `address` parameter was not included in the request, was empty or not valid.
+The `address` parameter was not included in the request, it was empty or not valid.
 
 ```
 {
@@ -142,7 +142,7 @@ The `address` parameter was not included in the request, was empty or not valid.
 ```
 
 #### Error 404: Address not found
-After checking both service provider no results were found for the supplied address.
+After checking both service providers no results were found for the supplied address.
 
 ```
 {
